@@ -12,7 +12,7 @@ namespace FoodResturant.Controllers
         {
             ingredients = new Repository<Ingredient>(context);  // that ties the repository into the applicationDbContext 
         }
-        public async Task <IActionResult>Index()
+        public async Task<IActionResult> Index()
         {
             return View(await ingredients.GetAllAsync());
         }
@@ -21,12 +21,12 @@ namespace FoodResturant.Controllers
         {
             // ingredient needs to include all of the products that is associated with
             // where queryOptions comes in to play 
-            return View(await ingredients.GetByIdAsync(id, new QueryOptions<Ingredient>() { Includes="ProductIngredients.Product"}));
+            return View(await ingredients.GetByIdAsync(id, new QueryOptions<Ingredient>() { Includes = "ProductIngredients.Product" }));
         }
 
         //Ingredient/Create
         [HttpGet]
-        public IActionResult Create() 
+        public IActionResult Create()
         {
             return View();
         }
@@ -35,14 +35,47 @@ namespace FoodResturant.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IngredientId", "Name")] Ingredient ingredient)
         {
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 await ingredients.AddAsync(ingredient);
                 return RedirectToAction("Index");
             }
             return View(ingredient);
 
-        } 
+        }
+
+        //Ingredient/Delete 
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            return View(await ingredients.GetByIdAsync(id, new QueryOptions<Ingredient> { Includes = "ProductIngredients.Product" }));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Ingredient ingredient)
+        {
+            await ingredients.DeleteAsync(ingredient.IngredientId);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            return View(await ingredients.GetByIdAsync(id, new QueryOptions<Ingredient> { Includes = "ProductIngredients.Product" }));
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Ingredient ingredient)
+        {
+            if (ModelState.IsValid) 
+            {
+                await ingredients.UpdateAsync(ingredient);
+                return RedirectToAction("Index");
+            }
+            return View(ingredient);
+
+        }
 
     }
 }
