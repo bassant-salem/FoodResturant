@@ -93,22 +93,6 @@ Product images are handled through:
 - Storage in `wwwroot/images/`
 - Fallback to placeholder images
 
-### Security Features
-- ASP.NET Core Identity integration
-- Anti-forgery token validation
-- Authorized controller actions
-- User-specific order isolation
-
-## 🎯 Default Route
-
-The application is configured with a custom default route:
-```csharp
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Ingredient}/{action=Index}/{id?}")
-```
-
-This means the application starts at the Ingredients page by default.
 
 ## 🔍 API Endpoints
 
